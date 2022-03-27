@@ -1,0 +1,48 @@
+﻿@using Warsztat_v2.Views.Order.Components
+
+@model OrderStatisticViewModel
+
+<div style="float: right; width: 30%; /*height:0%;*/"><h5>Orders Stats</h5></div>
+<div style="float: right; width: 50%; /*height:0%;*/"><h5>Search</h5></div>
+
+<table class="table">
+	<thead>
+		<tr>
+
+			<th>IDN</th>
+			<th>client</th>
+			<th>mechanic</th>
+			@*	@Html.ActionLink("Start Time", "Index", new { sortOrder = ViewBag.StatusSortParm })*@
+			<th>@Html.ActionLink("Waiting", "Index", new { sortOrder = ViewBag.WaitingStatus })</th>
+			@*<th><span style="color:red">|Waiting  @Model.WaitingOrders|</span> </th>*@
+
+			<th>@Html.ActionLink("Verivication", "Index" , new { sortOrder=ViewBag.VerivicationStatus }) </th>
+			@*<th><span style="color:yellow">|Verivication @Model.InVerivicationOrders|</span> </th>*@
+
+			<th>@Html.ActionLink("In progress", "Index", new { sortOrder = ViewBag.InProgressStatus }) </th>
+			@*<th><span style="color:green">|In Progress  @Model.InProgressOrders|</span> </th>*@
+
+			<th>@Html.ActionLink("Finished", "Index", new { sortOrder = ViewBag.FinishedStatus }) </th>
+			@*<th><span style="color:blue">|Finished  @Model.FinishedOrders|</span> </th>*@
+
+			<th>@Html.ActionLink("Cancelled", "Index", new { sortOrder = ViewBag.CancelledStatus }) </th>
+			@*<th><span style="color:black">|Cancelled  @Model.CacncelledOrders|</span> </th>*@
+
+			<th>@Html.ActionLink("Total", "Index", new { sortOrder = ViewBag.TotalOrders })  </th>
+
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>@using (Html.BeginForm("Index", "Order", FormMethod.Get)){<p>@Html.TextBox("searchStringForOrderNumber")</p>}</td>
+			<td>@using (Html.BeginForm()){<p>@Html.TextBox("searchStringForClient")</p>}</td>
+			<td>@using (Html.BeginForm()){<p>@Html.TextBox("searchStringForMechanic")</p>}</td>
+			<td><span style="color:red">@Model.WaitingOrders</span> </td>
+			<td><span style="color:orange">@Model.InVerivicationOrders</span> </td>
+			<td><span style="color:green">@Model.InProgressOrders</span> </td>
+			<td><span style="color:blue"> @Model.FinishedOrders</span> </td>
+			<td><span style="color:black">@Model.CacncelledOrders</span> </td>
+			<td><span style="color:black">@Model.Total</span> </td>
+		</tr>
+	</tbody>
+</table>

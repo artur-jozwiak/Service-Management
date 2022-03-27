@@ -1,0 +1,44 @@
+[
+  {
+    "Id": 3,
+    "PartName": "Filter Air",
+    "PartPrice": 57,
+    "Quantity": 1
+  },
+  {
+    "Id": 4,
+    "PartName": "Filter Petrol",
+    "PartPrice": 40,
+    "Quantity": 5
+  },
+  {
+    "Id": 5,
+    "PartName": "Brake Discs",
+    "PartPrice": 500,
+    "Quantity": 6
+  },
+  {
+    "Id": 6,
+    "PartName": "AC",
+    "PartPrice": 1000,
+    "Quantity": 8
+  },
+  {
+    "Id": 7,
+    "PartName": "Wheel",
+    "PartPrice": 350,
+    "Quantity": 1
+  },
+  {
+    "Id": 1,
+    "PartName": "Brake pads",
+    "PartPrice": 367,
+    "Quantity": 1
+  },
+  {
+    "Id": 2,
+    "PartName": "Oil Engine",
+    "PartPrice": 201,
+    "Quantity": 2
+  }
+]

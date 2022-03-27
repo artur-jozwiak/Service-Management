@@ -1,0 +1,78 @@
+﻿@model Order
+
+@functions {
+    public string GetWeekDay(DateTime dateTime)
+    {
+        return dateTime.DayOfWeek.ToString();
+    }
+}
+   <h4>Order</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            <label asp-for="OrderNumber"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.OrderNumber
+        </dd>
+        <dt class = "col-sm-2">
+            <label asp-for="StartTime"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.StartTime.ToString("dd-MM-yyyy") (@GetWeekDay(@Model.StartTime))
+        </dd>
+        <dt class = "col-sm-2">
+          <label asp-for="Status"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Status
+        </dd>
+        <dt class = "col-sm-2">
+           <label asp-for="Fault"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Fault
+        </dd>
+        <dt class = "col-sm-2">
+          <label asp-for="Client"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Client
+        </dd>
+        <dt class = "col-sm-2">
+         <label asp-for="RegistrationNumber"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.RegistrationNumber
+        </dd>
+          <dt class = "col-sm-2">
+           <label asp-for="Car"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Car
+        </dd>
+          <dt class = "col-sm-2">
+           <label asp-for="Mechanic"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Mechanic
+        </dd>
+          <dt class = "col-sm-2">
+           <label asp-for="Part"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Part
+        </dd>
+        <dt class = "col-sm-2">
+           <label asp-for="PartPcs"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.PartPcs
+        </dd>
+        <dt class = "col-sm-2">
+            <label asp-for="Price"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Price
+        </dd>
+            </dl>

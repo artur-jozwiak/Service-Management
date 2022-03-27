@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "FirstName": "Kuba",
+    "LastName": "Powiatowy",
+    "DateOfBirth": "1993-02-23T21:58:31.885",
+    "Salary": 3245,
+    "Role": 0
+  },
+  {
+    "Id": 2,
+    "FirstName": "Jaroslaw",
+    "LastName": "Polskezbawsky",
+    "DateOfBirth": "1956-02-23T21:58:31.8858948+01:00",
+    "Salary": 168998.99,
+    "Role": 0
+  },
+  {
+    "Id": 4,
+    "FirstName": "Tomasz",
+    "LastName": "Kleaner",
+    "DateOfBirth": "1974-02-23T21:58:31.8858964+01:00",
+    "Salary": 2983.75,
+    "Role": 1
+  },
+  {
+    "Id": 6,
+    "FirstName": "Konrad",
+    "LastName": "Ga\u017Anikow",
+    "DateOfBirth": "2005-02-23T21:58:31.885897+01:00",
+    "Salary": 3549.07,
+    "Role": 0
+  },
+  {
+    "Id": 1,
+    "FirstName": "Kubaa",
+    "LastName": "Powiatowy",
+    "DateOfBirth": "1993-02-23T21:58:31.885",
+    "Salary": 3245,
+    "Role": 0
+  }
+]
