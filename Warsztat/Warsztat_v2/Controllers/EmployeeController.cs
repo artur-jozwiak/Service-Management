@@ -1,107 +1,184 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Warsztat.BLL.Models;
-using Warsztat.BLL.Services;
+using Warsztat_v2.Data;
+using Warsztat_v2.Repositories.Interfaces;
 
 namespace Warsztat_v2.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
-        private EmployeeService _employeeService;
-        public EmployeeController()
+        private readonly ServiceContext _context;
+        private readonly IEmployeeRepository _employeeRepository;
+
+        public EmployeeController(ServiceContext context, IEmployeeRepository employeeRepository)
         {
-           _employeeService = new EmployeeService();
-        }
-        // GET: EmployeeControler
-        public ActionResult Index()
-        {
-           var model = _employeeService.GetAll();
-            return View(model);
+            _context = context;
+            _employeeRepository = employeeRepository;
         }
 
-        // GET: EmployeeControler/Details/5
-        public ActionResult Details(int id)
+        // GET: Employees
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            var model = _employeeService.GetById(id);
-            return View(model);
+            ViewBag.LastNameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.RoleSortParm = sortOrder == "Role" ? "role_desc" : "Role";
+            ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "firstName_desc" : "FirstName";
+            var emploees = from e in _context.Employees select e;
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    emploees = emploees.OrderByDescending(e => e.LastName);
+                    break;
+                case "FirstName":
+                    emploees = emploees.OrderBy(e => e.FirstName);
+                    break;
+                case "firstName_desc":
+                    emploees = emploees.OrderByDescending(e => e.FirstName);
+                    break;
+                case "Role":
+                    emploees = emploees.OrderBy(e => e.Role);
+                    break;
+                case "role_desc":
+                    emploees = emploees.OrderByDescending(e => e.Role);
+                    break;
+                default:
+                    emploees = emploees.OrderBy(e => e.LastName);
+                    break;
+            }
+            ClearTable();
+            _employeeRepository.AddFinishedOrder();
+            _context.SaveChanges();
+
+            return View(await emploees.ToListAsync());
         }
 
-        // GET: EmployeeControler/Create
-        public ActionResult Create()
+        // GET: Employees/Details/5
+        public async Task<IActionResult>  Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _context.Employees
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            //return View(employee);
+            return  Ok(employee);
+        }
+
+        // GET: Employees/Create
+        public IActionResult Create()
         {
             return View();
         }
 
-        // POST: EmployeeControler/Create
+        // POST: Employees/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Employee model)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,DateOfBirth,Salary,Role,FinishedOrder")] Employee employee)
         {
+            if (ModelState.IsValid)
+            {
+                _context.Add(employee);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(employee);
+        }
+
+        // GET: Employees/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return View(employee);
+        }
+
+        // POST: Employees/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,DateOfBirth,Salary,Role,FinishedOrder")] Employee employee)
+        {
+            if (id != employee.Id)
+            {
+                return NotFound();
+            }
+
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(model);
+                    return View(employee);
                 }
-                _employeeService.Create(model);
+                _employeeRepository.Update(employee);
                 return RedirectToAction(nameof(Index));
-                
             }
             catch
             {
-                return View();
+                return View(employee);
             }
         }
 
-        // GET: EmployeeControler/Edit/5
-        public ActionResult Edit(int id)
+        // GET: Employees/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            var model = _employeeService.GetById(id);
-            return View(model);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _context.Employees
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return View(employee);
         }
 
-        // POST: EmployeeControler/Edit/5
-        [HttpPost]
+        // POST: Employees/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Employee model)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-                _employeeService.Update(model);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var employee = await _context.Employees.FindAsync(id);
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: EmployeeControler/Delete/5
-        public ActionResult Delete(int id)
+        private bool EmployeeExists(int id)
         {
-            var model = _employeeService.GetById(id);
-            return View(model);
+            return _context.Employees.Any(e => e.Id == id);
         }
-
-        // POST: EmployeeControler/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Employee model)
+        private void ClearTable()
         {
-            try
+            foreach (var finishedOrders in _context.Employees)
             {
-                _employeeService.Delete(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
+                var employee = _context.Employees.First(e => e.Id == finishedOrders.Id);
+                employee.FinishedOrder = 0;
             }
         }
     }
+
 }

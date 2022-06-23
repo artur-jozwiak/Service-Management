@@ -1,13 +1,8 @@
-html {
-  
-    font-size: 14px;
-}
-
 @media (min-width: 768px) {
     html {
-       
+        height: 100%;
         font-size: 16px;
-        background-color: #011d4c;
+        background-color: black;
     }
 }
 
@@ -15,7 +10,7 @@ html {/*DownBar*/
 
     position: relative;
     min-height: 100%;
-    background-color: #011d4c;
+    background-color: black;
 
 }
 
@@ -49,7 +44,6 @@ body {/*Center*/
     background-color: #b6ff00;
 }
 .nav-link text-dark {
-   ;
     font-weight: 700;
 }
 li {
@@ -59,3 +53,4 @@ li {
 a {
     color: #000000;
 }
+

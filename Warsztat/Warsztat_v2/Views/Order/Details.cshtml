@@ -1,15 +1,15 @@
 ﻿@model Warsztat.BLL.Models.Order
 
-
 @{
     ViewData["Title"] = "Details";
 }
 
 <h1>Details</h1>
+
 <div>
-        <partial name="_OrderDetailsDelete" model=@Model/>@*partial view*@
+   <partial name="_OrderDetailsDelete" model=@Model/>
 </div>
 <div>
-     <a asp-action="Edit" asp-route-id="@Model.Id"></a> |
-    <a asp-action="Index">Back to List</a>
+    <a class=" text-white" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a class=" text-white" asp-action="Index">Back to List</a>
 </div>

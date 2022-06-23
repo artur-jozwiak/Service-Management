@@ -1,4 +1,5 @@
-﻿@model Warsztat.BLL.Models.Employee
+﻿@using Warsztat.BLL.Enums
+@model Warsztat.BLL.Models.Employee
 
 @{
     ViewData["Title"] = "Edit";
@@ -9,7 +10,7 @@
 <h4>Employee</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 text-white">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
@@ -25,7 +26,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" />
+                <input asp-for="DateOfBirth" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -35,7 +36,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Role" class="control-label"></label>
-                <input asp-for="Role" class="form-control" />
+                <select asp-for="Role" asp-items ="Html.GetEnumSelectList<Role>()" class = "form-control">
+                    <option selected = "selected" value = "">Please select an employee</option>
+                </select>
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -46,7 +49,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class = " text-white" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

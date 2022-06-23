@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Warsztat.BLL.Models.Car>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@*<img src="~/css/ikona.jpg" alt="" class="news_img" color="red" width="50" height="50">*@
+<h1>Cars</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            
+            <th>
+                <label asp-for="First().CarMark"></label>
+            </th>
+            <th>
+                <label asp-for="First().CarModel"></label>
+            </th>
+            <th>
+                <label asp-for="First().YearProduction"></label>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.CarMark
+            </td>
+            <td>
+                @item.CarModel
+            </td>
+            <td>
+                @item.YearProduction
+            </td>
+           
+           <td>
+                <a asp-action = "Edit" asp-route-id = "@item.Id">Edit</a> |
+                <a asp-action = "Details" asp-route-id = "@item.Id">Details</a> |
+                <a asp-action = "Delete" asp-route-id = "@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

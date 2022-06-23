@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Warsztat
+﻿namespace Warsztat
 {
     public class CarService
     {
 
-        static public Car AddCar()
+        public static Car AddCar()
         {
             bool loop = true;
             string Brand, Model;

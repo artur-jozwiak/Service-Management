@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Warsztat
+﻿namespace Warsztat
 {
     public class PartService
     {
-        PartRepository partsRepository = new PartRepository();
+        private PartRepository partsRepository = new PartRepository();
 
         public void PrintAllPart()// WYŚWIETLANIE LISTY CZESCI
         {
@@ -16,7 +10,7 @@ namespace Warsztat
             foreach (Part part in parts)
             {
                 int indexOfPart = parts.IndexOf(part);
-                Console.WriteLine($"{indexOfPart+1}. Name: {part.PartName} \n Price: {part.PartPrice} \n Quantity: {part.Quantity}");
+                Console.WriteLine($"{indexOfPart + 1}. Name: {part.PartName} \n Price: {part.PartPrice} \n Quantity: {part.Quantity}");
                 DecorateLine();
             }
         }
@@ -60,11 +54,11 @@ namespace Warsztat
             Console.WriteLine("Parts quantity raport \n" +
                 "You have to order:");
             int orderValue = 0;
-            foreach(var part in partsToRaport)
+            foreach (var part in partsToRaport)
             {
                 int indexOfOrder = parts.IndexOf(part);
                 Console.WriteLine($"{indexOfOrder + 1}. Name: {part.PartName} Quantity: {5 - part.Quantity}");
-                orderValue += part.Quantity*part.PartPrice;
+                orderValue += part.Quantity * part.PartPrice;
                 DecorateLine();
             }
             Console.WriteLine($"Order value: {orderValue}");

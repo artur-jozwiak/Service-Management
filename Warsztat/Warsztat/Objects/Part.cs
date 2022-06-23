@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Warsztat;
-using System.Text.Json;
-
-namespace Warsztat
+﻿namespace Warsztat
 {
     public class Part1
     {

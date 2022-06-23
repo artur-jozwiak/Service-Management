@@ -1,0 +1,51 @@
+﻿@*@model Warsztat_v2.ViewModels.CreateOrderViewModel*@
+@model Warsztat.BLL.Models.Order
+@using Warsztat.BLL.Enums
+@using Warsztat.BLL.Services
+
+@{
+    ViewData["Title"] = "Create";
+    // var formModel = new Order();
+  
+    //Model.OrderNumber =Model.RegistrationNumber+ Model.StartTime.ToString("yyyy")+Model.Id.ToString();
+}
+<h1>Create</h1>
+<h4>Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+
+            @*partial view*@ 
+            <partial name="_OrderCreateEdit" model=@Model view-data=ViewData/>@*view-data służu do przekazywania*@ 
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />          
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to orders</a>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+      @* <div class="form-group">
+                      @Html.LabelFor(m => formModel.StartTime);
+                @Html.TextBoxFor(m => formModel.StartTime);
+                <label asp-for="@nameof(Order.StartTime)" class="control-label"></label>
+                <input asp-for="@nameof(Order.StartTime)" class="form-control" />
+                <span asp-validation-for="@nameof(Order.StartTime)" class="text-danger"></span>
+            </div>*@
+
+          @*       <div class="form-group">
+                <label asp-for="@nameof(Order.Car)" class="control-label"></label>
+               @Html.LabelFor(m => Model.Cars);
+                  @Html.TextBoxFor(m => Model.Cars);
+                 <select asp-for="@nameof(Order.Car)" asp-items="@(new SelectList(Model.Cars,nameof(Carr.CarMark),nameof(Carr.CarModel)))"  class ="form-control"></select>    
+                <span asp-validation-for="@nameof(Order.Car)" class="text-danger"></span> 
+            </div>*@

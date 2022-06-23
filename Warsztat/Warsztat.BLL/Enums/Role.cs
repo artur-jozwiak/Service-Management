@@ -2,10 +2,12 @@
 {
     public enum Role
     {
+        Acountant,
+        CEO,
+        Manager,
         Mechanic,
         Service,
-        Acountant, //księgowa
-        Manager,
-        CEO
+        
+        
     }
 }

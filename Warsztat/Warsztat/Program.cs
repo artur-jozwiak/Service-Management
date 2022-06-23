@@ -1,8 +1,8 @@
 ﻿namespace Warsztat
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             List<Option> startMenuOptions = new List<Option>
            {
@@ -47,7 +47,7 @@
             bool program = true;
             int index = 0;
             int menuOption = 0;
-            var currentMenuOptions = startMenuOptions; 
+            var currentMenuOptions = startMenuOptions;
             ConsoleKeyInfo keyinfo;
 
             do
@@ -139,7 +139,7 @@
                                 menuOption = 0;
                                 index = 0;
                                 continue;
-    
+
                         }
                     }
                     if (menuOption == 2)
@@ -210,7 +210,7 @@
                                 currentMenuOptions = startMenuOptions;
                                 menuOption = 0;
                                 index = 0;
-                                continue;                                
+                                continue;
                         }
                     }
                     index = 0;

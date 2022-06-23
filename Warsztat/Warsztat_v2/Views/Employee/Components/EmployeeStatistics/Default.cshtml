@@ -1,0 +1,25 @@
+﻿@using Warsztat_v2.Views.Employee.Components
+@model EmployeeStatiscsViewModel
+
+
+    <table class="table table-dark table-hover text-white">
+        <thead>
+            <tr>
+                
+                <th>Employee of month </th>
+                <th>Finished orders</th>
+                <th>We employ</th>
+                <th>Mechanic team</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.EmployeeOfMonthName</td>
+                <td>@Model.FinishedOrders</td>
+                <td>@Model.EmployeeCount person</td>
+                <td>@Model.MechanicCount person</td>
+            </tr>
+        </tbody>
+    </table>
+

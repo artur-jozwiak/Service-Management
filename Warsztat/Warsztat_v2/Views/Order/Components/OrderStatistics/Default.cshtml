@@ -5,30 +5,30 @@
 <div style="float: right; width: 30%; /*height:0%;*/"><h5>Orders Stats</h5></div>
 <div style="float: right; width: 50%; /*height:0%;*/"><h5>Search</h5></div>
 
-<table class="table">
+<table class="table text-white">
 	<thead>
 		<tr>
 
 			<th>IDN</th>
-			<th>client</th>
-			<th>mechanic</th>
+			<th>CLIENT</th>
+			<th>MECHANIC</th>
 			@*	@Html.ActionLink("Start Time", "Index", new { sortOrder = ViewBag.StatusSortParm })*@
-			<th>@Html.ActionLink("Waiting", "Index", new { sortOrder = ViewBag.WaitingStatus })</th>
+			<th>@Html.ActionLink("WAITING", "Index", new { sortOrder = ViewBag.WaitingStatus }, new { @class ="text-white"})</th>
 			@*<th><span style="color:red">|Waiting  @Model.WaitingOrders|</span> </th>*@
 
-			<th>@Html.ActionLink("Verivication", "Index" , new { sortOrder=ViewBag.VerivicationStatus }) </th>
+			<th>@Html.ActionLink("VERIFICATION", "Index" , new { sortOrder=ViewBag.VerivicationStatus }, new { @class ="text-white"}) </th>
 			@*<th><span style="color:yellow">|Verivication @Model.InVerivicationOrders|</span> </th>*@
 
-			<th>@Html.ActionLink("In progress", "Index", new { sortOrder = ViewBag.InProgressStatus }) </th>
+			<th>@Html.ActionLink("IN PROGRESS", "Index", new { sortOrder = ViewBag.InProgressStatus }, new { @class ="text-white"}) </th>
 			@*<th><span style="color:green">|In Progress  @Model.InProgressOrders|</span> </th>*@
 
-			<th>@Html.ActionLink("Finished", "Index", new { sortOrder = ViewBag.FinishedStatus }) </th>
+			<th>@Html.ActionLink("FINISHED", "Index", new { sortOrder = ViewBag.FinishedStatus }, new { @class ="text-white"}) </th>
 			@*<th><span style="color:blue">|Finished  @Model.FinishedOrders|</span> </th>*@
 
-			<th>@Html.ActionLink("Cancelled", "Index", new { sortOrder = ViewBag.CancelledStatus }) </th>
+			<th>@Html.ActionLink("CANCELLED", "Index", new { sortOrder = ViewBag.CancelledStatus }, new { @class ="text-white"}) </th>
 			@*<th><span style="color:black">|Cancelled  @Model.CacncelledOrders|</span> </th>*@
 
-			<th>@Html.ActionLink("Total", "Index", new { sortOrder = ViewBag.TotalOrders })  </th>
+			<th>@Html.ActionLink("TOTAL", "Index", new { sortOrder = ViewBag.TotalOrders }, new { @class ="text-white"})  </th>
 
 		</tr>
 	</thead>
@@ -41,8 +41,8 @@
 			<td><span style="color:orange">@Model.InVerivicationOrders</span> </td>
 			<td><span style="color:green">@Model.InProgressOrders</span> </td>
 			<td><span style="color:blue"> @Model.FinishedOrders</span> </td>
-			<td><span style="color:black">@Model.CacncelledOrders</span> </td>
-			<td><span style="color:black">@Model.Total</span> </td>
+			<td><span style="color:yellow">@Model.CacncelledOrders</span> </td>
+			<td><span style="color:white">@Model.Total</span> </td>
 		</tr>
 	</tbody>
 </table>

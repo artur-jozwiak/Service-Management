@@ -1,29 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
-namespace Warsztat
+﻿namespace Warsztat
 {
     public abstract class Employee1
     {
         public string FirstName1 { get; set; }
-        public string LastName1 { get; set; } 
+        public string LastName1 { get; set; }
         public int Age1 { get; set; }
         public double Salary1 { get; set; }
 
-        
-        
+
+
         public Employee1(string firstName, string lastName, int age, double salary)
         {
             FirstName1 = firstName;
             LastName1 = lastName;
             Age1 = age;
             Salary1 = salary;
-            
+
         }
         //public abstract void AddEmployees();
         //public abstract void DeleteEmploye();
@@ -35,7 +27,7 @@ namespace Warsztat
         public virtual void ShowEmployee(Employee employee)
         {
             Console.WriteLine($"Name: {FirstName1} {LastName1}.\n" +
-                $"Age: {Age1, -10}." +
+                $"Age: {Age1,-10}." +
                 $"Salary: {Salary1}.");
         }
 
@@ -81,6 +73,6 @@ namespace Warsztat
 
         //}
     }
-    
+
 
 }

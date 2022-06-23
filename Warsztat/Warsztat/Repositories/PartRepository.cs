@@ -12,8 +12,8 @@ namespace Warsztat
         //    Parts addPart = addParts[int.Parse(Console.ReadLine()) - 1];
         //    return addPart;
         //}
-        
-        
+
+
 
         public void SavePartToFile(List<Part> parts) // zapis listy do pliku
         {

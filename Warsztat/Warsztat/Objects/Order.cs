@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace Warsztat
+﻿namespace Warsztat
 {
     public class Order1
     {
@@ -15,7 +7,7 @@ namespace Warsztat
         public string BrandOfCar1 { get; set; }
         public string ModelOfCar1 { get; set; }
         public int ProductionYearOfCar1 { get; set; }
-      public Mechanic Mechanic1 { get; set; }
+        public Mechanic Mechanic1 { get; set; }
 
         public Order1(string status, string fault, Mechanic mechanic, int productionYearOfCar, string brandOfCar, string modelOfCar)
         {

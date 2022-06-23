@@ -1,38 +1,43 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Warsztat.BLL.Services;
-using Warsztat.BLL.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using Warsztat.BLL.Enums;
 using Warsztat.BLL.Models;
-using PagedList;
+using Warsztat_v2.Data;
+//using Warsztat.BLL.Models;
+using Warsztat_v2.Repositories.Interfaces;
 
 namespace Warsztat_v2.Controllers
 {
+   // [ApiController]
+    [Authorize]
     public class OrderController : Controller
     {
-        private IOrderService _orderService;
+        private readonly ServiceContext _context;
+        private readonly IOrderRepository _orderRepository;
+        VehicleResponse _vehicleResponse = new VehicleResponse();
 
-        private CarService _carrService;//
-        private EmployeeService _employeeService;//
-        private IPartService _partService;//
+     
 
-        public OrderController(IOrderService orderService, IPartService partService/*,ICarService carService*/)
+        public OrderController(ServiceContext context, IOrderRepository orderRepository)
         {
-            _orderService = orderService;
-            _partService = partService;//
-            _carrService = new CarService();//
-            _employeeService = new EmployeeService();//
+            _context = context;
+            _orderRepository = orderRepository;
         }
-        // GET: OrderController
-        public ActionResult Index(string sortOrder, string searchStringForClient, string searchStringForOrderNumber, string searchStringForMechanic)
-        {
-            var model = _orderService.GetAll();
-          
 
-            //sortowanie po kolumnach
+        // GET: Orders
+        public async Task<IActionResult> Index(string sortOrder, string searchStringForClient, string searchStringForOrderNumber, string searchStringForMechanic)
+        {
+
+            var model = _context.Orders
+              .Include(o => o.Car)
+              .Include(o => o.Mechanic)
+              .ToList();
+
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
-
             ViewBag.WaitingStatus = sortOrder == "Status" ? "WaitingStatus" : "Status";
             ViewBag.VerivicationStatus = sortOrder == "Status" ? "VerivicationStatus" : "Status";
             ViewBag.InProgressStatus = sortOrder == "Status" ? "InProgressStatus" : "Status";
@@ -41,15 +46,11 @@ namespace Warsztat_v2.Controllers
             ViewBag.TotalOrders = sortOrder == "Status" ? "TotalOrders" : "Status";
 
             var orders = from o in model
-                           select o;
-            //sortowanie po kolumnach
+                         select o;
 
-
-
-            //Search box
             if (!String.IsNullOrEmpty(searchStringForClient))
             {
-                orders = orders.Where(o => o.Client.ToUpper().Contains(searchStringForClient.ToUpper()));                        
+                orders = orders.Where(o => o.Client.ToUpper().Contains(searchStringForClient.ToUpper()));
             }
             if (!String.IsNullOrEmpty(searchStringForOrderNumber))
             {
@@ -57,11 +58,9 @@ namespace Warsztat_v2.Controllers
             }
             if (!String.IsNullOrEmpty(searchStringForMechanic))
             {
-                orders = orders.Where(o => o.Mechanic.ToUpper().Contains(searchStringForMechanic.ToUpper()));
+                orders = orders.Where(o => o.Mechanic.FullName.ToUpper().Contains(searchStringForMechanic.ToUpper()));
             }
-            //Search box
 
-            //Switch do sortowania po kolumnach
             switch (sortOrder)
             {
                 case "name_desc":
@@ -89,118 +88,195 @@ namespace Warsztat_v2.Controllers
                     orders = orders.Where(o => o.Status == Status.Cancelled);
                     break;
                 case "TotalOrders":
-                    orders = _orderService.GetAll().ToList();
+                    orders = model.ToList();
                     break;
-
                 default:
                     orders = orders.OrderBy(o => o.Client);
                     break;
             }
-
             return View(orders);
         }
 
-        // GET: OrderController/Details/5
-        public ActionResult Details(int id)
+        // GET: Orders/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            var model = _orderService.GetById(id);
-            return View(model);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Orders
+                .Include(o => o.Car)
+                .Include(o => o.Mechanic)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
         }
 
-        // GET: OrderController/Create
-        public ActionResult Create()
+        public string GetMakeName()
         {
-            ViewBag.Cars = _carrService.GetAll().ToList();
-            ViewBag.Parts = _partService.GetAll().ToList();
-            ViewBag.Mechanics = _employeeService.GetAll().Where(e => e.Role == Role.Mechanic).ToList();
-            //ViewBag.Employees = _employeeService.GetAll().ToList();
-
-            //var model = new CreateOrderViewModel()
-            //{
-            //    Cars = _carrService.GetAll(),
-            //    Parts = _partService.GetAll(),
-            //    Employees = _employeeService.GetAll().Where(e => e.Role == Role.Mechanic).ToList()
-            //};
-
-            return View(/*model*/);
-
+            string makeName = "";
+            return makeName;
         }
 
-        // POST: OrderController/Create
+        //[HttpGet("/vehicle")]
+        // GET: Orders/Create
+        public async Task<IActionResult> Create(/*string carMark = ""*/)
+        {
+            
+            var client = new HttpClient();
+            var response = await client.GetAsync("https://vpic.nhtsa.dot.gov/api//vehicles/GetMakesForVehicleType/car?format=json");
+            var vehicleResponse = await response.Content.ReadFromJsonAsync<VehicleResponse>();
+            var carsMakes = vehicleResponse.Results.OrderBy(c => c.MakeName);
+            ViewBag.CarMark = new SelectList((System.Collections.IEnumerable)carsMakes, "MakeName", "MakeName");
+ 
+            //var responseForModel = await client.GetAsync($"https://vpic.nhtsa.dot.gov/api//vehicles/GetModelsForMake/0?format=json");
+            //var vehicleResponseForModel = await responseForModel.Content.ReadFromJsonAsync<VehicleResponse>();
+            //var carsModels = vehicleResponseForModel.Results.OrderBy(c => c.Model_Name);
+            //ViewData["CarModel"] = new SelectList((System.Collections.IEnumerable)carsModels, "Model_Name", "Model_Name");
+
+            ViewData["MechanicId"] = new SelectList(_context.Employees.Where(e => e.Role == Role.Mechanic), "Id", "FullName");
+
+            return View();
+        }
+
+        // POST: Orders/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Order model)
-        {   
-            try
+        public async Task<IActionResult> Create([Bind("Id,OrderNumber,StartTime,WorkTime,EndTime,Status,Fault,Client,RegistrationNumber,CarId,MechanicId,Price")] Order order)
+        {
+            //if (ModelState.IsValid)
             {
-                model.OrderNumber = _orderService.OrderNumberGenerator(model/*.RegistrationNumber, model.StartTime.ToString("yyyy"), model.Id.ToString()*/);
-                _orderService.Create(model);
-                if (ModelState.IsValid)
+                //_context.Add(order);
+                _orderRepository.Add(order);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            var client = new HttpClient();
+            var response = await client.GetAsync("https://vpic.nhtsa.dot.gov/api//vehicles/GetMakesForVehicleType/car?format=json");
+            var vehicleResponse = await response.Content.ReadFromJsonAsync<VehicleResponse>();
+            var carsMakes = vehicleResponse.Results.OrderBy(c => c.MakeName);
+            ViewBag.CarMark = new SelectList((System.Collections.IEnumerable)carsMakes, "MakeName", "MakeName");
+            ViewData["MechanicId"] = new SelectList(_context.Employees.Where(e => e.Role == Role.Mechanic), "Id", "FullName", order.MechanicId);
+            return View(order);
+        }
+
+        // GET: Orders/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+
+            var client = new HttpClient();
+            var response = await client.GetAsync("https://vpic.nhtsa.dot.gov/api//vehicles/GetMakesForVehicleType/car?format=json");
+            var vehicleResponse = await response.Content.ReadFromJsonAsync<VehicleResponse>();
+            var carsMakes = vehicleResponse.Results.OrderBy(c => c.MakeName);
+            ViewBag.CarMark = new SelectList((System.Collections.IEnumerable)carsMakes, "MakeName", "MakeName");
+            ViewData["MechanicId"] = new SelectList(_context.Employees.Where(e => e.Role == Role.Mechanic), "Id", "FullName", order.MechanicId);
+            return View(order);
+        }
+
+        // POST: Orders/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OrderNumber,StartTime,WorkTime,EndTime,Status,Fault,Client,RegistrationNumber,CarId,MechanicId,Price")] Order order)
+        {
+            if (id != order.Id)
+            {
+                return NotFound();
+            }
+
+            //if (ModelState.IsValid)
+            {
+                try
                 {
-                    return View(model);
+                    //_context.Update(order);
+                    _orderRepository.Update(order);
+                    await _context.SaveChangesAsync();
                 }
-               // _orderService.Create(model);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: OrderController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            ViewBag.Cars = _carrService.GetAll().ToList();
-            ViewBag.Parts = _partService.GetAll().ToList();
-            ViewBag.Mechanics = _employeeService.GetAll().Where(m => m.Role == Role.Mechanic).ToList();
-           
-
-            var model =_orderService.GetById(id);
-            return View(model);
-        }
-
-        // POST: OrderController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Order model)
-        {
-            try
-            {
-                if(ModelState.IsValid)
+                catch (DbUpdateConcurrencyException)
                 {
-                    return View(model);
-                }             
-                _orderService.Update(model);
+                    if (!OrderExists(order.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            var client = new HttpClient();
+            var response = await client.GetAsync("https://vpic.nhtsa.dot.gov/api//vehicles/GetMakesForVehicleType/car?format=json");
+            var vehicleResponse = await response.Content.ReadFromJsonAsync<VehicleResponse>();
+            var carsMakes = vehicleResponse.Results.OrderBy(c => c.MakeName);
+            ViewBag.CarMark = new SelectList((System.Collections.IEnumerable)carsMakes, "MakeName", "MakeName");
+            ViewData["MechanicId"] = new SelectList(_context.Employees.Where(e => e.Role == Role.Mechanic), "Id", "FullName", order.MechanicId);
+            return View(order);
         }
 
-        // GET: OrderController/Delete/5
-        public ActionResult Delete(int id)
+        // GET: Orders/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            var model = _orderService.GetById(id);
-            return View(model);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Orders
+                .Include(o => o.Car)
+                .Include(o => o.Mechanic)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
         }
 
-        // POST: OrderController/Delete/5
-        [HttpPost]
+        // POST: Orders/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Order model)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                _orderService.Delete(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var order = await _context.Orders.FindAsync(id);
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        private bool OrderExists(int id)
+        {
+            return _context.Orders.Any(e => e.Id == id);
+        }
+        public async Task<IActionResult> CreateForCarModel(string makeName )
+        {
+            var client = new HttpClient();
+            var responseForModel = await client.GetAsync($"https://vpic.nhtsa.dot.gov/api//vehicles/GetModelsForMake/{makeName}?format=json");
+            var vehicleResponseForModel = await responseForModel.Content.ReadFromJsonAsync<VehicleResponse>();
+            var carsModels = vehicleResponseForModel.Results.OrderBy(c => c.Model_Name);
+            ViewData["CarModel"] = new SelectList((System.Collections.IEnumerable)carsModels, "Model_Name", "Model_Name");
+
+            return View();
         }
     }
 }

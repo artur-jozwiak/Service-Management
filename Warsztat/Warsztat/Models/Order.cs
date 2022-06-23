@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace Warsztat
+﻿namespace Warsztat
 {
     public class Order
     {
@@ -15,13 +7,13 @@ namespace Warsztat
         public string BrandOfCar { get; set; }
         public string ModelOfCar { get; set; }
         public int ProductionYearOfCar { get; set; }
-     //   public string MechanicName { get; set; }
-     //   public string MechanicSurname { get; set; }
-      public Mechanic Mechanic { get; set; }
+        //   public string MechanicName { get; set; }
+        //   public string MechanicSurname { get; set; }
+        public Mechanic Mechanic { get; set; }
         //public Car Car { get; set; }
 
 
-     
+
 
 
 
@@ -34,7 +26,7 @@ namespace Warsztat
             ProductionYearOfCar = productionYearOfCar;
 
             Mechanic = mechanic;
-           // MechanicName = mechanicName;
+            // MechanicName = mechanicName;
             //MechanicSurname = mechanicSurname;
         }
 

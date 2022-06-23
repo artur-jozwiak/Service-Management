@@ -1,0 +1,42 @@
+﻿@model Warsztat.BLL.Models.Part
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Part</h4>
+    <hr />
+    <dl class="row">
+         <dt class = "col-sm-2">
+            <label asp-for="Id"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Id
+        </dd>
+        <dt class = "col-sm-2">
+            <label asp-for="PartName"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.PartName
+        </dd>
+        <dt class = "col-sm-2">
+            <label asp-for="PartPrice"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.PartPrice
+        </dd>
+        <dt class = "col-sm-2">
+            <label asp-for="Quantity"></label>
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Quantity
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id"></a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,11 +1,8 @@
-﻿using System.Text.Json;
-using Warsztat.BLL.Enums;
-using Warsztat.BLL.Models;
-
-namespace Warsztat.BLL.Services
+﻿namespace Warsztat.BLL.Services
 {
     public class EmployeeService
     {
+        /*
         private static List<Employee> Employees = new List<Employee>
         {
             new Employee()
@@ -62,56 +59,17 @@ namespace Warsztat.BLL.Services
                 Salary = 3549.07,
                 Role = Role.Mechanic
             }
+        
         };
+        */
 
-        public void Update(Employee model)
-        {
-            var employee = GetById(model.Id);
-            employee.FirstName = model.FirstName;
-            employee.LastName = model.LastName;
-            employee.DateOfBirth = model.DateOfBirth;
-            employee.Salary = model.Salary;
-            employee.Role = model.Role;
-            SaveToFile();
-        }
 
-        private static int IdCounter = 6;
-        public List<Employee> GetAll()
-        {
-            string jasonFromFile = File.ReadAllText(@"employeeList.json");
+        //private void SaveToFile()
+        //{
+        //    string json = JsonSerializer.Serialize(Employees);
 
-            Employees = JsonSerializer.Deserialize<List<Employee>>(jasonFromFile);
-            return Employees;
-        }
-
-        private int GetNextId()
-        {
-            IdCounter = IdCounter + 1;
-            return IdCounter;
-        }
-
-        public void Delete(int id)
-        {
-            Employees.Remove(GetById(id));
-            SaveToFile();
-        }
-
-        public Employee GetById(int id)
-        {
-            return Employees.FirstOrDefault(e => e.Id == id);
-        }
-        public void Create(Employee employee)
-        {
-            employee.Id = GetNextId();
-            Employees.Add(employee);
-            SaveToFile();
-        }
-        private void SaveToFile()
-        {
-            string json = JsonSerializer.Serialize(Employees);
-
-            File.WriteAllText(@"C:\Users\Łukasz\Desktop\RepoWarsztat567\jcszr5-Majstry\Warsztat\Warsztat_v2\employeeList.json", json);
-        }
+        //    File.WriteAllText(@"C:\Users\Łukasz\Desktop\RepoWarsztat567\jcszr5-Majstry\Warsztat\Warsztat_v2\employeeList.json", json);
+        //}
         //private void DeleteFromFile()
         //{
         //    string jasonFromFile = File.ReadAllText(@"C:\Users\2021\source\repos\jcszr5-Majstry\Warsztat\Warsztat_v2\employeeList.json");

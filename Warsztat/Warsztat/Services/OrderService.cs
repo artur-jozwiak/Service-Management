@@ -2,8 +2,8 @@
 {
     public class OrderService
     {
-        OrderRepository orderRepository = new OrderRepository();
-        EmployeeService employeeService = new EmployeeService();
+        private OrderRepository orderRepository = new OrderRepository();
+        private EmployeeService employeeService = new EmployeeService();
 
 
         public void CreateNewOrder()

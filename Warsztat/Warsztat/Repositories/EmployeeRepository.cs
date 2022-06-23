@@ -18,7 +18,7 @@ namespace Warsztat
             return mechanicFromFile;
         }
 
-        
+
     }
-    
+
 }

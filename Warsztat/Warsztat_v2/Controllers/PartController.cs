@@ -1,29 +1,33 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Warsztat.BLL.Models;
-using Warsztat.BLL.Services;
-
+using Warsztat_v2.Data;
+using Warsztat_v2.Repositories;
 
 namespace Warsztat_v2.Controllers
 {
+    [Authorize]
     public class PartController : Controller
     {
-        private PartService _partService;
-        public PartController()
+        private readonly PartRepository _partRepository;
+        public ServiceContext Context { get; set; }
+        public PartController(ServiceContext serviceContext)
         {
-            _partService = new PartService();
+            Context = serviceContext;
+            _partRepository = new PartRepository(Context);
         }
+
         // GET: PartController1
         public ActionResult Index()
         {
-            var model = _partService.GetAll();
+            var model = Context.Parts;
             return View(model);
         }
 
         // GET: PartController1/Details/5
         public ActionResult Details(int id)
         {
-            var model = _partService.GetById(id);
+            var model = _partRepository.GetById(id);
             return View(model);
         }
 
@@ -44,7 +48,7 @@ namespace Warsztat_v2.Controllers
                 {
                     return View(model);
                 }
-                _partService.Create(model);
+                _partRepository.Add(model);
 
                 return RedirectToAction(nameof(Index));
 
@@ -58,7 +62,7 @@ namespace Warsztat_v2.Controllers
         // GET: PartController1/Edit/5
         public ActionResult Edit(int id)
         {
-            var model = _partService.GetById(id);
+            var model = _partRepository.GetById(id);
             return View(model);
         }
 
@@ -73,7 +77,7 @@ namespace Warsztat_v2.Controllers
                 {
                     return View(model);
                 }
-                _partService.Update(model);
+                _partRepository.Update(model);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -85,7 +89,7 @@ namespace Warsztat_v2.Controllers
         // GET: PartController1/Delete/5
         public ActionResult Delete(int id)
         {
-            var model = _partService.GetById(id);
+            var model = _partRepository.GetById(id);
             return View(model);
         }
 
@@ -96,7 +100,7 @@ namespace Warsztat_v2.Controllers
         {
             try
             {
-                _partService.Delete(id);
+                _partRepository.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
